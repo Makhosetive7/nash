@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NashMart API Tester</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .output {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .output pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        .success {
+            color: #28a745;
+        }
+        
+        .error {
+            color: #dc3545;
+        }
+        
+        .info {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>NashMart API Tester</h1>
+            <p>Test your backend API endpoints with one click</p>
+        </div>
+        
+        <div class="content">
+            <div class="info">
+                <strong>API Base URL:</strong> http://localhost:8001/api/<br>
+                <strong>Status:</strong> <span id="status">Ready to test</span>
+            </div>
+            
+            <!-- Products Section -->
+            <div class="section">
+                <h2>Products API</h2>
+                <div class="button-group">
+                    <button onclick="testAPI('products.php?action=list', 'GET')">Get All Products</button>
+                    <button onclick="testAPI('products.php?action=get&id=1', 'GET')">Get Product #1</button>
+                    <button onclick="createProduct()">Create Product</button>
+                    <button onclick="updateProduct()">Update Product #1</button>
+                    <button onclick="deleteProduct()">Delete Product #5</button>
+                </div>
+            </div>
+            
+            <!-- Sales Section -->
+            <div class="section">
+                <h2>Sales API</h2>
+                <div class="button-group">
+                    <button onclick="testAPI('sales.php?action=list', 'GET')">Get All Sales</button>
+                    <button onclick="createSale()">Record Sale (Product #1, Qty: 2)</button>
+                </div>
+            </div>
+            
+            <!-- Dashboard Section -->
+            <div class="section">
+                <h2>Dashboard API</h2>
+                <div class="button-group">
+                    <button onclick="testAPI('dashboard.php', 'GET')">Get Dashboard Stats</button>
+                </div>
+            </div>
+            
+            <!-- Output Section -->
+            <div class="section">
+                <h2>API Response</h2>
+                <div class="output" id="output">
+                    <pre>Click a button above to test the API...</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8001/api/';
+        
+        async function testAPI(endpoint, method = 'GET', body = null) {
+            const output = document.getElementById('output');
+            const status = document.getElementById('status');
+            
+            output.innerHTML = '<pre>Loading...</pre>';
+            status.innerHTML = '<span class="status">Testing...</span>';
+            
+            try {
+                const options = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+                
+                if (body) {
+                    options.body = JSON.stringify(body);
+                }
+                
+                const response = await fetch(API_BASE + endpoint, options);
+                const data = await response.json();
+                
+                const statusClass = data.success ? 'success' : 'error';
+                output.innerHTML = `<pre class="${statusClass}">${JSON.stringify(data, null, 2)}</pre>`;
+                status.innerHTML = `<span class="status ${statusClass}">${data.success ? 'Success' : 'Error'}</span>`;
+                
+            } catch (error) {
+                output.innerHTML = `<pre class="error">Error: ${error.message}</pre>`;
+                status.innerHTML = '<span class="status error">Failed</span>';
+            }
+        }
+        
+        async function createProduct() {
+            const formData = new FormData();
+            formData.append('product_name', 'Test Product');
+            formData.append('description', 'This is a test product created via API');
+            formData.append('price', '99.99');
+            formData.append('quantity_in_stock', '50');
+            
+            const output = document.getElementById('output');
+            output.innerHTML = '<pre>Creating product...</pre>';
+            
+            try {
+                const response = await fetch(API_BASE + 'products.php?action=create', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                
+                const statusClass = data.success ? 'success' : 'error';
+                output.innerHTML = `<pre class="${statusClass}">${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                output.innerHTML = `<pre class="error">Error: ${error.message}</pre>`;
+            }
+        }
+        
+        async function updateProduct() {
+            const body = new URLSearchParams({
+                product_name: 'Updated Product Name',
+                price: '149.99',
+                quantity_in_stock: '75'
+            });
+            
+            const output = document.getElementById('output');
+            output.innerHTML = '<pre>Updating product...</pre>';
+            
+            try {
+                const response = await fetch(API_BASE + 'products.php?action=update&id=1', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: body.toString()
+                });
+                const data = await response.json();
+                
+                const statusClass = data.success ? 'success' : 'error';
+                output.innerHTML = `<pre class="${statusClass}">${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                output.innerHTML = `<pre class="error">Error: ${error.message}</pre>`;
+            }
+        }
+        
+        async function deleteProduct() {
+            if (!confirm('Are you sure you want to delete product #5?')) {
+                return;
+            }
+            await testAPI('products.php?action=delete&id=5', 'DELETE');
+        }
+        
+        async function createSale() {
+            await testAPI('sales.php?action=create', 'POST', {
+                product_id: 1,
+                quantity_sold: 2
+            });
+        }
+    </script>
+</body>
+</html>

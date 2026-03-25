@@ -26,15 +26,6 @@ try {
     exit;
 }
 
-function sendResponse($success, $message, $data = null, $statusCode = 200) {
-    header('Content-Type: application/json');
-    http_response_code($statusCode);
-    $response = ['success' => $success, 'message' => $message];
-    if ($data !== null) { $response['data'] = $data; }
-    echo json_encode($response);
-    exit;
-}
-
 function sanitizeInput($data) {
     return htmlspecialchars(stripslashes(trim($data)));
 }
