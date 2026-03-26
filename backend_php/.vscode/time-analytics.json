@@ -1,0 +1,77 @@
+{
+  "version": "1.0",
+  "project": {
+    "totalFocusTime": 2513927,
+    "totalActiveTime": 80076
+  },
+  "files": {
+    "test.html": {
+      "pending": 11659,
+      "focus": 375346
+    },
+    ".htaccess": {
+      "pending": 0,
+      "focus": 5003
+    },
+    "config/helpers.php": {
+      "pending": 0,
+      "focus": 9474
+    },
+    "api/create_product.php": {
+      "pending": 0,
+      "focus": 13455
+    },
+    "api/create_sale.php": {
+      "pending": 0,
+      "focus": 4119
+    },
+    "api/dashboard.php": {
+      "pending": 0,
+      "focus": 1660
+    },
+    "api/delete_product.php": {
+      "pending": 0,
+      "focus": 1098
+    },
+    "api/get_products.php": {
+      "pending": 0,
+      "focus": 1175
+    },
+    "api/get_sales.php": {
+      "pending": 0,
+      "focus": 3357
+    },
+    "api/update_products.php": {
+      "pending": 0,
+      "focus": 3587
+    },
+    "config/database.php": {
+      "pending": 1065,
+      "focus": 69653
+    },
+    "controllers/ProductController.php": {
+      "pending": 2562,
+      "focus": 84001
+    },
+    "controllers/SalesController.php": {
+      "pending": 0,
+      "focus": 1214
+    },
+    "models/product.php": {
+      "pending": 0,
+      "focus": 2576
+    },
+    "models/sale.php": {
+      "pending": 0,
+      "focus": 8432
+    },
+    "controllers/DashboardController.php": {
+      "pending": 0,
+      "focus": 3029
+    },
+    "README.md": {
+      "pending": 64790,
+      "focus": 1919542
+    }
+  }
+}

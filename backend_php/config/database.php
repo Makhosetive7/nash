@@ -25,18 +25,3 @@ try {
     ]);
     exit;
 }
-
-function sanitizeInput($data) {
-    return htmlspecialchars(stripslashes(trim($data)));
-}
-
-function validateRequired($fields, $data) {
-    $missing = [];
-    foreach ($fields as $field) {
-        if (!isset($data[$field]) || empty($data[$field])) {
-            $missing[] = $field;
-        }
-    }
-    return $missing;
-}
-?>

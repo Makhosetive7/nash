@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . "../models/product.php";
-require_once __DIR__ . "../config/helpers.php";
+require_once __DIR__ . "/../models/product.php";
+require_once __DIR__ . "/../config/helpers.php";
 
 
 class ProductController
@@ -66,7 +66,7 @@ class ProductController
             sendResponse(false, "Price must be greater than Zero", null, 400);
         }
 
-        if ($data["quantiy_in_stock"] <= 0) {
+        if ($data["quantity_in_stock"] < 0) {
             sendResponse(false, "Quantity can not be negative", null, 500);
         }
 

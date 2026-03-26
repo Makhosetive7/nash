@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NashMart API Tester</title>
+    <title>NashMart API Tester - CORRECTED</title>
     <style>
         * {
             margin: 0;
@@ -120,6 +120,14 @@
             border-radius: 4px;
         }
         
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
         .status {
             display: inline-block;
             padding: 4px 12px;
@@ -143,22 +151,27 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>NashMart API Tester</h1>
-            <p>Test your backend API endpoints with one click</p>
+            <h1>🛍️ NashMart API Tester</h1>
+            <p>Test your backend API endpoints with one click - CORRECTED VERSION</p>
         </div>
         
         <div class="content">
             <div class="info">
-                <strong>API Base URL:</strong> http://localhost:8001/api/<br>
-                <strong>Status:</strong> <span id="status">Ready to test</span>
+                <strong>📍 API Base URL:</strong> http://localhost:8001/api/<br>
+                <strong>📝 Status:</strong> <span id="status">Ready to test</span>
+            </div>
+
+            <div class="warning">
+                <strong>✅ FIXED ENDPOINTS:</strong> All URLs corrected to match your actual API structure
             </div>
             
             <!-- Products Section -->
             <div class="section">
-                <h2>Products API</h2>
+                <h2>📦 Products API</h2>
                 <div class="button-group">
-                    <button onclick="testAPI('products.php?action=list', 'GET')">Get All Products</button>
-                    <button onclick="testAPI('products.php?action=get&id=1', 'GET')">Get Product #1</button>
+                    <button onclick="testAPI('get_products.php', 'GET')">Get All Products</button>
+                    <button onclick="testAPI('get_products.php?id=1', 'GET')">Get Product #1</button>
+                    <button onclick="testAPI('get_products.php?id=999', 'GET')">Get Invalid Product (Test 404)</button>
                     <button onclick="createProduct()">Create Product</button>
                     <button onclick="updateProduct()">Update Product #1</button>
                     <button onclick="deleteProduct()">Delete Product #5</button>
@@ -167,16 +180,17 @@
             
             <!-- Sales Section -->
             <div class="section">
-                <h2>Sales API</h2>
+                <h2>💰 Sales API</h2>
                 <div class="button-group">
-                    <button onclick="testAPI('sales.php?action=list', 'GET')">Get All Sales</button>
+                    <button onclick="testAPI('get_sales.php', 'GET')">Get All Sales</button>
                     <button onclick="createSale()">Record Sale (Product #1, Qty: 2)</button>
+                    <button onclick="createInvalidSale()">Record Sale - Insufficient Stock</button>
                 </div>
             </div>
             
             <!-- Dashboard Section -->
             <div class="section">
-                <h2>Dashboard API</h2>
+                <h2>📊 Dashboard API</h2>
                 <div class="button-group">
                     <button onclick="testAPI('dashboard.php', 'GET')">Get Dashboard Stats</button>
                 </div>
@@ -184,7 +198,7 @@
             
             <!-- Output Section -->
             <div class="section">
-                <h2>API Response</h2>
+                <h2>📤 API Response</h2>
                 <div class="output" id="output">
                     <pre>Click a button above to test the API...</pre>
                 </div>
@@ -218,18 +232,19 @@
                 const data = await response.json();
                 
                 const statusClass = data.success ? 'success' : 'error';
-                output.innerHTML = `<pre class="${statusClass}">${JSON.stringify(data, null, 2)}</pre>`;
+                const statusIcon = data.success ? '✅' : '❌';
+                output.innerHTML = `<pre class="${statusClass}">${statusIcon} ${method} ${endpoint}\n\n${JSON.stringify(data, null, 2)}</pre>`;
                 status.innerHTML = `<span class="status ${statusClass}">${data.success ? 'Success' : 'Error'}</span>`;
                 
             } catch (error) {
-                output.innerHTML = `<pre class="error">Error: ${error.message}</pre>`;
+                output.innerHTML = `<pre class="error">❌ Error: ${error.message}\n\nPossible causes:\n• Server not running (cd backend_php && php -S localhost:8001)\n• CORS issue\n• Network error</pre>`;
                 status.innerHTML = '<span class="status error">Failed</span>';
             }
         }
         
         async function createProduct() {
             const formData = new FormData();
-            formData.append('product_name', 'Test Product');
+            formData.append('product_name', 'Test Product ' + Date.now());
             formData.append('description', 'This is a test product created via API');
             formData.append('price', '99.99');
             formData.append('quantity_in_stock', '50');
@@ -238,43 +253,47 @@
             output.innerHTML = '<pre>Creating product...</pre>';
             
             try {
-                const response = await fetch(API_BASE + 'products.php?action=create', {
+                // CORRECTED: Was 'products.php?action=create', now 'create_product.php'
+                const response = await fetch(API_BASE + 'create_product.php', {
                     method: 'POST',
                     body: formData
                 });
                 const data = await response.json();
                 
                 const statusClass = data.success ? 'success' : 'error';
-                output.innerHTML = `<pre class="${statusClass}">${JSON.stringify(data, null, 2)}</pre>`;
+                const statusIcon = data.success ? '✅' : '❌';
+                output.innerHTML = `<pre class="${statusClass}">${statusIcon} POST create_product.php\n\n${JSON.stringify(data, null, 2)}</pre>`;
             } catch (error) {
-                output.innerHTML = `<pre class="error">Error: ${error.message}</pre>`;
+                output.innerHTML = `<pre class="error">❌ Error: ${error.message}</pre>`;
             }
         }
         
         async function updateProduct() {
-            const body = new URLSearchParams({
-                product_name: 'Updated Product Name',
-                price: '149.99',
-                quantity_in_stock: '75'
-            });
+            const body = {
+                product_name: 'Updated Product Name ' + Date.now(),
+                price: 149.99,
+                quantity_in_stock: 75
+            };
             
             const output = document.getElementById('output');
             output.innerHTML = '<pre>Updating product...</pre>';
             
             try {
-                const response = await fetch(API_BASE + 'products.php?action=update&id=1', {
+                // CORRECTED: Was 'products.php?action=update&id=1', now 'update_products.php?id=1'
+                const response = await fetch(API_BASE + 'update_products.php?id=1', {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
+                        'Content-Type': 'application/json'
                     },
-                    body: body.toString()
+                    body: JSON.stringify(body)
                 });
                 const data = await response.json();
                 
                 const statusClass = data.success ? 'success' : 'error';
-                output.innerHTML = `<pre class="${statusClass}">${JSON.stringify(data, null, 2)}</pre>`;
+                const statusIcon = data.success ? '✅' : '❌';
+                output.innerHTML = `<pre class="${statusClass}">${statusIcon} PUT update_products.php?id=1\n\n${JSON.stringify(data, null, 2)}</pre>`;
             } catch (error) {
-                output.innerHTML = `<pre class="error">Error: ${error.message}</pre>`;
+                output.innerHTML = `<pre class="error">❌ Error: ${error.message}</pre>`;
             }
         }
         
@@ -282,15 +301,37 @@
             if (!confirm('Are you sure you want to delete product #5?')) {
                 return;
             }
-            await testAPI('products.php?action=delete&id=5', 'DELETE');
+            // CORRECTED: Was 'products.php?action=delete&id=5', now 'delete_product.php?id=5'
+            await testAPI('delete_product.php?id=5', 'DELETE');
         }
         
         async function createSale() {
-            await testAPI('sales.php?action=create', 'POST', {
+            // CORRECTED: Was 'sales.php?action=create', now 'create_sale.php'
+            await testAPI('create_sale.php', 'POST', {
                 product_id: 1,
                 quantity_sold: 2
             });
         }
+        
+        async function createInvalidSale() {
+            // Test with insufficient stock
+            await testAPI('create_sale.php', 'POST', {
+                product_id: 1,
+                quantity_sold: 10000
+            });
+        }
+
+        // Check server on load
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetch(API_BASE + 'get_products.php');
+                if (response.ok) {
+                    document.getElementById('status').innerHTML = '<span class="status success">Server Connected ✓</span>';
+                }
+            } catch (e) {
+                document.getElementById('status').innerHTML = '<span class="status error">Server Not Running ✗</span>';
+            }
+        });
     </script>
 </body>
 </html>
