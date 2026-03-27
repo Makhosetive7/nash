@@ -49,6 +49,28 @@ class Sale
         return $result ? $this->pdo->lastInsertId() : false;
     }
 
+    public function update($id, $data)
+    {
+        $stmt = $this->pdo->prepare("
+            UPDATE sales
+            SET quantity_sold = ?,
+                total_price = ?
+            WHERE id = ?
+        ");
+
+        return $stmt->execute([
+            $data['quantity_sold'],
+            $data['total_price'],
+            $id
+        ]);
+    }
+
+    public function delete($id)
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM sales WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+
     public function getRecent($limit = 10)
     {
         $stmt = $this->pdo->prepare("

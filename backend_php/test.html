@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NashMart API Tester - CORRECTED</title>
+    <title>NashMart API Tester - COMPLETE VERSION</title>
     <style>
         * {
             margin: 0;
@@ -41,6 +41,15 @@
         
         .header p {
             opacity: 0.9;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-top: 10px;
         }
         
         .content {
@@ -86,13 +95,22 @@
             transform: translateY(0);
         }
         
+        button.danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
+        
+        button.warning {
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+            color: #000;
+        }
+        
         .output {
             background: #f8f9fa;
             border: 1px solid #e9ecef;
             border-radius: 5px;
             padding: 20px;
             margin-top: 20px;
-            max-height: 400px;
+            max-height: 500px;
             overflow-y: auto;
         }
         
@@ -120,12 +138,13 @@
             border-radius: 4px;
         }
         
-        .warning {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
+        .success-banner {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
             padding: 15px;
             margin-bottom: 20px;
             border-radius: 4px;
+            color: #155724;
         }
         
         .status {
@@ -151,46 +170,52 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🛍️ NashMart API Tester</h1>
-            <p>Test your backend API endpoints with one click - CORRECTED VERSION</p>
+            <h1>NashMart API Tester</h1>
+            <p>Complete API Testing Suite - All CRUD Operations</p>
+            <span class="badge">Edit & Delete Sales Added</span>
         </div>
         
         <div class="content">
             <div class="info">
-                <strong>📍 API Base URL:</strong> http://localhost:8001/api/<br>
-                <strong>📝 Status:</strong> <span id="status">Ready to test</span>
+                <strong>API Base URL:</strong> http://localhost:8001/api/<br>
+                <strong>Status:</strong> <span id="status">Ready to test</span>
             </div>
 
-            <div class="warning">
-                <strong>✅ FIXED ENDPOINTS:</strong> All URLs corrected to match your actual API structure
+            <div class="success-banner">
+                <strong>NEW ENDPOINTS ADDED:</strong><br>
+                • PUT /api/update_sale.php - Edit existing sales<br>
+                • DELETE /api/delete_sale.php - Delete sales and restore stock
             </div>
             
             <!-- Products Section -->
             <div class="section">
-                <h2>📦 Products API</h2>
+                <h2>Products API</h2>
                 <div class="button-group">
                     <button onclick="testAPI('get_products.php', 'GET')">Get All Products</button>
                     <button onclick="testAPI('get_products.php?id=1', 'GET')">Get Product #1</button>
-                    <button onclick="testAPI('get_products.php?id=999', 'GET')">Get Invalid Product (Test 404)</button>
+                    <button onclick="testAPI('get_products.php?id=999', 'GET')">Get Invalid Product (404)</button>
                     <button onclick="createProduct()">Create Product</button>
-                    <button onclick="updateProduct()">Update Product #1</button>
-                    <button onclick="deleteProduct()">Delete Product #5</button>
+                    <button class="warning" onclick="updateProduct()">Update Product #1</button>
+                    <button class="danger" onclick="deleteProduct()">Delete Product #5</button>
                 </div>
             </div>
             
             <!-- Sales Section -->
             <div class="section">
-                <h2>💰 Sales API</h2>
+                <h2>Sales API - COMPLETE CRUD</h2>
                 <div class="button-group">
                     <button onclick="testAPI('get_sales.php', 'GET')">Get All Sales</button>
-                    <button onclick="createSale()">Record Sale (Product #1, Qty: 2)</button>
-                    <button onclick="createInvalidSale()">Record Sale - Insufficient Stock</button>
+                    <button onclick="createSale()">Create Sale (Product #1, Qty: 2)</button>
+                    <button class="warning" onclick="updateSale()">Update Sale #1 (Qty: 5)</button>
+                    <button class="warning" onclick="updateSaleInsufficientStock()">Update Sale - Insufficient Stock</button>
+                    <button class="danger" onclick="deleteSale()">Delete Sale #1 (Restore Stock)</button>
+                    <button onclick="createInvalidSale()">Test Insufficient Stock Error</button>
                 </div>
             </div>
             
             <!-- Dashboard Section -->
             <div class="section">
-                <h2>📊 Dashboard API</h2>
+                <h2>Dashboard API</h2>
                 <div class="button-group">
                     <button onclick="testAPI('dashboard.php', 'GET')">Get Dashboard Stats</button>
                 </div>
@@ -198,9 +223,13 @@
             
             <!-- Output Section -->
             <div class="section">
-                <h2>📤 API Response</h2>
+                <h2>API Response</h2>
                 <div class="output" id="output">
-                    <pre>Click a button above to test the API...</pre>
+                    <pre>Click a button above to test the API...
+
+NEW ENDPOINTS:
+- Update Sale: Edits quantity and adjusts stock automatically
+- Delete Sale: Removes sale and restores stock to inventory</pre>
                 </div>
             </div>
         </div>
@@ -232,12 +261,12 @@
                 const data = await response.json();
                 
                 const statusClass = data.success ? 'success' : 'error';
-                const statusIcon = data.success ? '✅' : '❌';
+                const statusIcon = data.success ? '[SUCCESS]' : '[ERROR]';
                 output.innerHTML = `<pre class="${statusClass}">${statusIcon} ${method} ${endpoint}\n\n${JSON.stringify(data, null, 2)}</pre>`;
                 status.innerHTML = `<span class="status ${statusClass}">${data.success ? 'Success' : 'Error'}</span>`;
                 
             } catch (error) {
-                output.innerHTML = `<pre class="error">❌ Error: ${error.message}\n\nPossible causes:\n• Server not running (cd backend_php && php -S localhost:8001)\n• CORS issue\n• Network error</pre>`;
+                output.innerHTML = `<pre class="error">[ERROR] ${error.message}\n\nPossible causes:\n• Server not running (cd backend_php && php -S localhost:8001)\n• CORS issue\n• Network error</pre>`;
                 status.innerHTML = '<span class="status error">Failed</span>';
             }
         }
@@ -253,7 +282,6 @@
             output.innerHTML = '<pre>Creating product...</pre>';
             
             try {
-                // CORRECTED: Was 'products.php?action=create', now 'create_product.php'
                 const response = await fetch(API_BASE + 'create_product.php', {
                     method: 'POST',
                     body: formData
@@ -261,10 +289,10 @@
                 const data = await response.json();
                 
                 const statusClass = data.success ? 'success' : 'error';
-                const statusIcon = data.success ? '✅' : '❌';
+                const statusIcon = data.success ? '[SUCCESS]' : '[ERROR]';
                 output.innerHTML = `<pre class="${statusClass}">${statusIcon} POST create_product.php\n\n${JSON.stringify(data, null, 2)}</pre>`;
             } catch (error) {
-                output.innerHTML = `<pre class="error">❌ Error: ${error.message}</pre>`;
+                output.innerHTML = `<pre class="error">[ERROR] ${error.message}</pre>`;
             }
         }
         
@@ -279,7 +307,6 @@
             output.innerHTML = '<pre>Updating product...</pre>';
             
             try {
-                // CORRECTED: Was 'products.php?action=update&id=1', now 'update_products.php?id=1'
                 const response = await fetch(API_BASE + 'update_products.php?id=1', {
                     method: 'PUT',
                     headers: {
@@ -290,10 +317,10 @@
                 const data = await response.json();
                 
                 const statusClass = data.success ? 'success' : 'error';
-                const statusIcon = data.success ? '✅' : '❌';
+                const statusIcon = data.success ? '[SUCCESS]' : '[ERROR]';
                 output.innerHTML = `<pre class="${statusClass}">${statusIcon} PUT update_products.php?id=1\n\n${JSON.stringify(data, null, 2)}</pre>`;
             } catch (error) {
-                output.innerHTML = `<pre class="error">❌ Error: ${error.message}</pre>`;
+                output.innerHTML = `<pre class="error">[ERROR] ${error.message}</pre>`;
             }
         }
         
@@ -301,16 +328,46 @@
             if (!confirm('Are you sure you want to delete product #5?')) {
                 return;
             }
-            // CORRECTED: Was 'products.php?action=delete&id=5', now 'delete_product.php?id=5'
             await testAPI('delete_product.php?id=5', 'DELETE');
         }
         
         async function createSale() {
-            // CORRECTED: Was 'sales.php?action=create', now 'create_sale.php'
             await testAPI('create_sale.php', 'POST', {
                 product_id: 1,
                 quantity_sold: 2
             });
+        }
+        
+        // Update Sale
+        async function updateSale() {
+            const output = document.getElementById('output');
+            output.innerHTML = '<pre>Updating sale #1 to quantity 5...</pre>';
+            
+            await testAPI('update_sale.php?id=1', 'PUT', {
+                quantity_sold: 5
+            });
+        }
+        
+        //Update Sale with Insufficient Stock
+        async function updateSaleInsufficientStock() {
+            const output = document.getElementById('output');
+            output.innerHTML = '<pre>Testing update with insufficient stock (quantity 10000)...</pre>';
+            
+            await testAPI('update_sale.php?id=1', 'PUT', {
+                quantity_sold: 10000
+            });
+        }
+        
+        // Delete Sale
+        async function deleteSale() {
+            if (!confirm('Are you sure you want to delete sale #1? Stock will be restored.')) {
+                return;
+            }
+            
+            const output = document.getElementById('output');
+            output.innerHTML = '<pre>Deleting sale #1 and restoring stock...</pre>';
+            
+            await testAPI('delete_sale.php?id=1', 'DELETE');
         }
         
         async function createInvalidSale() {
@@ -326,10 +383,10 @@
             try {
                 const response = await fetch(API_BASE + 'get_products.php');
                 if (response.ok) {
-                    document.getElementById('status').innerHTML = '<span class="status success">Server Connected ✓</span>';
+                    document.getElementById('status').innerHTML = '<span class="status success">Server Connected</span>';
                 }
             } catch (e) {
-                document.getElementById('status').innerHTML = '<span class="status error">Server Not Running ✗</span>';
+                document.getElementById('status').innerHTML = '<span class="status error">Server Not Running</span>';
             }
         });
     </script>
