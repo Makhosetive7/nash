@@ -1,13 +1,13 @@
 {
   "version": "1.0",
   "project": {
-    "totalFocusTime": 3251877,
-    "totalActiveTime": 94366
+    "totalFocusTime": 7867594,
+    "totalActiveTime": 208656
   },
   "files": {
     "test.html": {
       "pending": 19472,
-      "focus": 455918
+      "focus": 504814
     },
     ".htaccess": {
       "pending": 0,
@@ -19,7 +19,7 @@
     },
     "api/create_product.php": {
       "pending": 0,
-      "focus": 13455
+      "focus": 15953
     },
     "api/create_sale.php": {
       "pending": 0,
@@ -27,7 +27,7 @@
     },
     "api/dashboard.php": {
       "pending": 0,
-      "focus": 1660
+      "focus": 3837
     },
     "api/delete_product.php": {
       "pending": 0,
@@ -47,7 +47,7 @@
     },
     "config/database.php": {
       "pending": 1065,
-      "focus": 69653
+      "focus": 70893
     },
     "controllers/ProductController.php": {
       "pending": 2562,
@@ -67,19 +67,27 @@
     },
     "controllers/DashboardController.php": {
       "pending": 0,
-      "focus": 3029
+      "focus": 48912
     },
     "README.md": {
       "pending": 64790,
-      "focus": 1925821
+      "focus": 1974485
     },
     "api/update_sale.php": {
       "pending": 1130,
-      "focus": 35318
+      "focus": 40986
     },
     "api/delete_sale.php": {
       "pending": 1139,
-      "focus": 26015
+      "focus": 32148
+    },
+    "database/nashmart_database.sql": {
+      "pending": 12000,
+      "focus": 807937
+    },
+    "assumptions_README.md": {
+      "pending": 102290,
+      "focus": 3319536
     }
   }
 }
