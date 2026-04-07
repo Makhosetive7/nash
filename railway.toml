@@ -1,0 +1,5 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "cd backend_php && php -S 0.0.0.0:$PORT"
