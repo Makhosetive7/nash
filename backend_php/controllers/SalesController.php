@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . '/../models/Sale.php';
-require_once __DIR__ . '/../models/Product.php';
+require_once __DIR__ . '/../models/sale.php';
+require_once __DIR__ . '/../models/product.php';
 require_once __DIR__ . '/../config/helpers.php';
 
 class SalesController

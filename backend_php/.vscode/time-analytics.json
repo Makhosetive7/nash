@@ -1,13 +1,13 @@
 {
   "version": "1.0",
   "project": {
-    "totalFocusTime": 7867594,
-    "totalActiveTime": 208656
+    "totalFocusTime": 7943301,
+    "totalActiveTime": 215381
   },
   "files": {
     "test.html": {
       "pending": 19472,
-      "focus": 504814
+      "focus": 522338
     },
     ".htaccess": {
       "pending": 0,
@@ -27,7 +27,7 @@
     },
     "api/dashboard.php": {
       "pending": 0,
-      "focus": 3837
+      "focus": 6312
     },
     "api/delete_product.php": {
       "pending": 0,
@@ -51,11 +51,11 @@
     },
     "controllers/ProductController.php": {
       "pending": 2562,
-      "focus": 553829
+      "focus": 561658
     },
     "controllers/SalesController.php": {
-      "pending": 2470,
-      "focus": 70616
+      "pending": 4605,
+      "focus": 92807
     },
     "models/product.php": {
       "pending": 0,
@@ -66,8 +66,8 @@
       "focus": 58553
     },
     "controllers/DashboardController.php": {
-      "pending": 0,
-      "focus": 48912
+      "pending": 4590,
+      "focus": 66344
     },
     "README.md": {
       "pending": 64790,
