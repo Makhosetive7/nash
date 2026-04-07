@@ -1,13 +1,15 @@
 <?php
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'nashmart_db');
-define('DB_USER', 'nashmart_user');
-define('DB_PASS', 'nashmart123');
+// Railway environment variables or fallback to local development
+define('DB_HOST', getenv('MYSQLHOST') ?: 'localhost');
+define('DB_NAME', getenv('MYSQLDATABASE') ?: 'nashmart_db');
+define('DB_USER', getenv('MYSQLUSER') ?: 'nashmart_user');
+define('DB_PASS', getenv('MYSQLPASSWORD') ?: 'nashmart123');
+define('DB_PORT', getenv('MYSQLPORT') ?: '3306');
 define('DB_CHARSET', 'utf8mb4');
 
 try {
     $pdo = new PDO(
-        "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET,
+        "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET,
         DB_USER,
         DB_PASS,
         [

@@ -1,0 +1,30 @@
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Uploaded files (don't commit user uploads)
+backend_php/uploads/*
+!backend_php/uploads/.gitkeep
+
+# Environment variables (if you create a local .env file)
+.env
+.env.local
+
+# Log files
+*.log
+
+# Temporary files
+tmp/
+temp/
+cache/
+
+# Database dumps (except the schema)
+*.sql.gz
+backup_*.sql

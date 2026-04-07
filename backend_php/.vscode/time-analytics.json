@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "project": {
-    "totalFocusTime": 7943301,
-    "totalActiveTime": 215381
+    "totalFocusTime": 8002580,
+    "totalActiveTime": 217781
   },
   "files": {
     "test.html": {
@@ -46,8 +46,8 @@
       "focus": 3587
     },
     "config/database.php": {
-      "pending": 1065,
-      "focus": 70893
+      "pending": 2302,
+      "focus": 82489
     },
     "controllers/ProductController.php": {
       "pending": 2562,
@@ -55,7 +55,7 @@
     },
     "controllers/SalesController.php": {
       "pending": 4605,
-      "focus": 92807
+      "focus": 116611
     },
     "models/product.php": {
       "pending": 0,
@@ -88,6 +88,14 @@
     "assumptions_README.md": {
       "pending": 102290,
       "focus": 3319536
+    },
+    "nixpacks.toml": {
+      "pending": 598,
+      "focus": 11828
+    },
+    ".gitignore ": {
+      "pending": 565,
+      "focus": 11678
     }
   }
 }
