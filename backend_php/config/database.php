@@ -1,15 +1,31 @@
 <?php
-// Railway environment variables or fallback to local development
-define('DB_HOST', getenv('MYSQLHOST') ?: 'localhost');
-define('DB_NAME', getenv('MYSQLDATABASE') ?: 'nashmart_db');
-define('DB_USER', getenv('MYSQLUSER') ?: 'nashmart_user');
-define('DB_PASS', getenv('MYSQLPASSWORD') ?: 'nashmart123');
-define('DB_PORT', getenv('MYSQLPORT') ?: '3306');
+// Use MYSQL_URL from Railway (contains full connection string)
+$mysqlUrl = getenv('MYSQL_URL');
+
+if ($mysqlUrl) {
+    // Parse the connection URL: mysql://user:pass@host:port/database
+    $parsed = parse_url($mysqlUrl);
+    define('DB_HOST', $parsed['host']);
+    define('DB_NAME', ltrim($parsed['path'], '/'));
+    define('DB_USER', $parsed['user']);
+    define('DB_PASS', $parsed['pass']);
+    define('DB_PORT', $parsed['port'] ?? '3306');
+} else {
+    // Fallback to local development
+    define('DB_HOST', 'localhost');
+    define('DB_NAME', 'nashmart_db');
+    define('DB_USER', 'nashmart_user');
+    define('DB_PASS', 'nashmart123');
+    define('DB_PORT', '3306');
+}
+
 define('DB_CHARSET', 'utf8mb4');
 
 try {
+    $dsn = "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
+    
     $pdo = new PDO(
-        "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET,
+        $dsn,
         DB_USER,
         DB_PASS,
         [
